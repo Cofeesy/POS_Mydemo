@@ -16,6 +16,7 @@ import (
 //  @Description:矿工数据结构
 //
 type Stakeholder struct {
+	//简化了address,使用string作为holder的唯一标识
 	Address   string
 	CoinAge   int
 	CoinCount int
@@ -45,7 +46,7 @@ func printMinersInfo(coinPool *CoinPool) {
 
 //
 // selectStakeholder
-//  @Description: 选择币池中的权益者 => POS的具体简易实现
+//  @Description: 选择币池中的权益者 => POS的竞争出胜者的简易实现
 //  @param coinPool
 //  @return string
 //
@@ -55,6 +56,8 @@ func selectStakeholder(coinPool *CoinPool) string {
 	var maxStakeholder string
 	for index, stakeholder := range coinPool.Stakeholders {
 		if stakeholder.CoinCount > maxTokens {
+			//矿工的币数越多,则更有可能被选出,这里我简化了很多,直接选择了拥有最大币数量的矿工,但由于初始化设置的币数量都是一样,
+			//则其实选择的永远是第一个矿工 => 为了简化测试
 			maxTokens = stakeholder.CoinCount
 			maxStakeholder = index
 		}
@@ -88,6 +91,13 @@ func isHashValid(hash string, difficulty int, coinAge int) bool {
 	return hash < strconv.Itoa(target)
 }
 
+//
+// resetToZero
+//  @Description: 将竞争胜利者的币龄清零
+//  @receiver coinPool
+//  @param stakeholder
+//  @return bool
+//
 func (coinPool *CoinPool) resetToZero(stakeholder string) bool {
 	coinPool.Stakeholders[stakeholder].CoinAge = 0
 	return true
@@ -108,8 +118,10 @@ func initializeMiners(numMiners int) *CoinPool {
 	for i := 1; i <= numMiners; i++ {
 		address := fmt.Sprintf("Miner%d", i)
 		coinPool.Stakeholders[address] = &Stakeholder{
-			Address:   address,
-			CoinAge:   5,
+			Address: address,
+			//设为5,相同
+			CoinAge: 5,
+			//设为5,相同
 			CoinCount: 5,
 		}
 	}

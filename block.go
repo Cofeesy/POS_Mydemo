@@ -17,19 +17,21 @@ import (
 //  @Description: 区块数据结构
 //
 type Block struct {
-	Index       int
-	Timestamp   time.Time
+	Index     int
+	Timestamp time.Time
+	//当一个矿工竞争成功的时候,记录该矿工
 	Stakeholder string
 	TimeCounter int
 	TradeData   string
 	PrevHash    string
 	Hash        string
-	Difficulty  int
+	//简化了运算，没有全局定义和全局初始化difficulty,于是初始使用的difficulty是零,而生成一个区块后,difficulty变为2
+	Difficulty int
 }
 
 //
 //  Blockchain
-//  @Description: 区块链数据结构
+//  @Description: 区块链数据结构 => 简化的数组,没有使用链表的定义
 //
 type Blockchain struct {
 	Blocks []Block
@@ -37,7 +39,7 @@ type Blockchain struct {
 
 //
 // calculateHash
-//  @Description: 计算区块hash
+//  @Description: 计算区块hash => 用于区块生成时生成block中的Hash和Prevhash字段
 //  @param block
 //  @return string
 //
